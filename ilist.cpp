@@ -93,30 +93,62 @@ public :
 };
 
 
-template < class T, class E > class FUN
+class sum_int
 {
     public:
-        E get_neitral()
+        int get_neitral()
         {
             return 0;
         }
-        E solo(T a)
+        int solo(int a)
         {
             return a;
         }
-        E f(T & a, T & b) {
+        int f(int a, int b) {
             return a + b;
         };
 };
 
-template < class T, template <class T, class E> class T2 , class E> class ilist {
-    T2 <T, E> help;
+class min_int
+{
+    public:
+        int get_neitral()
+        {
+            return 1234567890;
+        }
+        int solo(int a)
+        {
+            return a;
+        }
+        int f(int a, int b) {
+            return min(a, b);
+        };
+};
+
+class zag_chr
+{
+    public:
+        int get_neitral()
+        {
+            return 0;
+        }
+        int solo(char a)
+        {
+            return ((a <= 'Z' and a >= 'A'));
+        }
+        int f(int a, int b) {
+            return a + b;
+        };
+};
+
+template < class T, class T2, class _E> class ilist {
+    T2 help;
     #define cnt(t) ((t) ? (t)->c : 0)
     #define foo(t) ((t) ? (t)->funct : (help.get_neitral()))
     #define updc(t) if(t) (t)->c = cnt(t->l) + cnt(t->r) + 1, t->funct = help.f(help.f(foo(t->l), help.solo(t->val)) , foo(t->r))
     struct tree {
         T val;
-        E funct;
+        _E funct;
         int pr, c;
         tree * l, *r;
         tree() {
@@ -124,9 +156,9 @@ template < class T, template <class T, class E> class T2 , class E> class ilist 
             c = 0;
             l = r = 0;
         }
-        tree(E _val, int P, tree * L, tree * R) : val(_val) {
+        tree(_E _val, int P, tree * L, tree * R) : val(_val) {
             pr = P;
-            T2 <T, E> help2;
+            T2 help2;
             l = L, r = R;
             funct = help2.solo(val);
             c = cnt(l) + cnt(r) + 1;
@@ -224,12 +256,12 @@ public :
         merge(root, root, tr);
     }
 
-    E function(int l, int r) {
+    _E function(int l, int r) {
         l--, r--;
         tree * tl, *tm, * tr;
         split(root, l, tl, tr);
         split(tr, r - l + 1, tm, tr);
-        E ans = foo(tm);
+        _E ans = foo(tm);
         merge(root, tl, tm);
         merge(root, root, tr);
         return ans;
@@ -248,8 +280,9 @@ public :
     #undef updc(t)
 };
 
-template <typename T, template <class T, class E> class F, class E>
+template <typename T, class F, class E>
 ilist <T, F, E>  operator + (ilist < T, F, E > a, ilist < T, F, E > b) {
+        //assert(typeid(a) == typeid(b));
         ilist < T, F, E > c;
         c.merge(c.root, a.root, b.root);
         c.n = a.n + b.n;
@@ -259,7 +292,7 @@ ilist <T, F, E>  operator + (ilist < T, F, E > a, ilist < T, F, E > b) {
 int main()
 {
     srand(time(0));
-    ilist <char, FUN <int, int> , int> a, b, c;
+    ilist <char, zag_chr, int> a, b, c;
     for (int i = 0; i < 10; i++)
         a.insert(i, 'a');
     for (int i = 0; i < 10; i++)
